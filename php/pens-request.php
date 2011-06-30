@@ -76,9 +76,9 @@ class PensRequest {
 
     public function getParamString(){
         $paramStr = '';
-        foreach ($this->pensParameterMap as $member => $paramName){
-            if(!empty($this->$member)){
-                $paramVal = $this->$member;
+        foreach ($this->pensParameterMap as $property => $paramName){
+            if(!empty($this->$property)){
+                $paramVal = $this->$property;
                 $paramStr .= $paramName . '=' . urlencode($paramVal) . '&';
             }
         }
@@ -97,8 +97,8 @@ class PensRequest {
                 $this->targetSystemUrl = $postParamVal;
             } else {
                 if(isset($paramMap[$postParamName])){
-                    $memberName = $paramMap[$postParamName];
-                    $this->$memberName = $postParamVal;
+                    $propertyName = $paramMap[$postParamName];
+                    $this->$propertyName = $postParamVal;
                 }
             }
         }
