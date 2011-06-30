@@ -74,7 +74,7 @@ class PensRequest {
         'vendorData' => 'vendor-data'
     );
 
-    public function getCommandParameters(){
+    public function getParamString(){
         $paramStr = '';
         foreach ($this->pensParameterMap as $member => $paramName){
             if(!empty($this->$member)){
@@ -87,7 +87,21 @@ class PensRequest {
     }
 
     public function getCommandUrl(){
-        return $this->targetSystemUrl . '?' . $this->getCommandParameters();
+        return $this->targetSystemUrl . '?' . $this->getParamString();
+    }
+
+    public function populateFromPensParams($pensParams){
+        $paramMap = array_flip($this->pensParameterMap);
+        foreach($_POST as $postParamName => $postParamVal) {
+            if($postParamName == 'URL'){
+                $this->targetSystemUrl = $postParamVal;
+            } else {
+                if(isset($paramMap[$postParamName])){
+                    $memberName = $paramMap[$postParamName];
+                    $this->$memberName = $postParamVal;
+                }
+            }
+        }
     }
 }
 
@@ -97,27 +111,13 @@ class PensRequest {
 
 //--------- End PENS request class, begin page processing ------
 
-function fillPensRequest($postParams, $pensRequest){
-    $paramMap = array_flip($pensRequest->pensParameterMap);
-    foreach($_POST as $postParamName => $postParamVal) {
-        if($postParamName == 'URL'){
-            $pensRequest->targetSystemUrl = $postParamVal;
-        } else {
-            if(isset($paramMap[$postParamName])){
-                $memberName = $paramMap[$postParamName];
-                $pensRequest->$memberName = $postParamVal;
-            }
-        }
-    }
-}
-
 $formPosted = !empty($_POST);
 
 $pensRequest = new PensRequest();
 $commandUrl = '';
 
 if ($formPosted) {
-    fillPensRequest($_POST, $pensRequest);
+    $pensRequest->populateFromPensParams($_POST);
     $commandUrl = $pensRequest->getCommandUrl(); 
 }
 
