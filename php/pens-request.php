@@ -28,6 +28,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* The code below shows an example of how one might use server side code to create
+   a PENS request. The PensRequest class is a simple object based wrapper around an HTTP
+   based PENS request. All other code below it shows an example of how you can use the class. */
+
 class PensRequest {
     public $clientNameSpace = null;
     public $targetSystemUrl = null;
